@@ -8,6 +8,8 @@ class UAnimMontage;
 class USkeletalMeshComponent;
 class UMeshComponent;
 class USoundBase;
+class UParticleSystem;
+class UNiagaraSystem;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class BROKENDAWN_API UBrokenDawnMeleeComponent : public UActorComponent
@@ -59,11 +61,23 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Config")
 	FName DefaultWeaponSocketEnd = "WeaponTraceEnd";
 
-	// --- EFFETTI AUDIO (SFX) ---
+	// --- EFFETTI VISIVI E AUDIO (VFX / SFX) ---
 
-	/** Suono riprodotto durante l'esecuzione dell'attacco (fendente) */
+	/** Suono riprodotto all'impatto con un nemico/bersaglio */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Effects")
-	USoundBase* AttackSound;
+	USoundBase* HitSound;
+
+	/** Suono riprodotto durante il fendente nell'aria */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Effects")
+	USoundBase* SwingSound;
+
+	/** Effetto particellare Cascade (legacy) generato sul punto d'impatto */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Effects")
+	UParticleSystem* HitParticleEffect;
+
+	/** Effetto particellare Niagara (UE5 Standard) generato sul punto d'impatto */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Melee|Effects")
+	UNiagaraSystem* HitNiagaraEffect;
 
 	// Stato Interno
 	bool bIsAttacking = false;

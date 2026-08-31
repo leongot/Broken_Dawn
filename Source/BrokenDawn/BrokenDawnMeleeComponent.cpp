@@ -7,8 +7,11 @@
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
-#include "Engine/DamageEvents.h"
 #include "DrawDebugHelpers.h"
+#include "Particles/ParticleSystem.h"
+#include "Sound/SoundBase.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystem.h"
 
 UBrokenDawnMeleeComponent::UBrokenDawnMeleeComponent()
 {
@@ -25,6 +28,7 @@ void UBrokenDawnMeleeComponent::BeginPlay()
 
 float UBrokenDawnMeleeComponent::PerformLightAttack()
 {
+	// Se stiamo già attaccando ma siamo nella finestra di Combo, salviamo il click!
 	if (bIsAttacking)
 	{
 		if (bCanCombo)
@@ -51,10 +55,9 @@ float UBrokenDawnMeleeComponent::PerformLightAttack()
 	bCanCombo = false;
 	bSavedAttack = false;
 
-	// --- SFX ATTACCO ---
-	if (AttackSound)
+	if (SwingSound)
 	{
-		UGameplayStatics::PlaySoundAtLocation(this, AttackSound, GetOwner()->GetActorLocation());
+		UGameplayStatics::PlaySoundAtLocation(this, SwingSound, GetOwner()->GetActorLocation());
 	}
 
 	float MaxDuration = 0.0f;
@@ -77,6 +80,7 @@ float UBrokenDawnMeleeComponent::PerformLightAttack()
 			ComboIndex = (ComboIndex + 1) % LightAttackMontages.Num();
 		}
 
+		// Timer di sicurezza se la combo non prosegue
 		GetWorld()->GetTimerManager().SetTimer(AttackResetTimerHandle, this, &UBrokenDawnMeleeComponent::ResetAttackState, MaxDuration + AttackCooldown, false);
 	}
 	else
@@ -98,8 +102,8 @@ void UBrokenDawnMeleeComponent::DisableComboWindow()
 	if (bSavedAttack)
 	{
 		bSavedAttack = false;
-		bIsAttacking = false;
-		PerformLightAttack();
+		bIsAttacking = false; // Permette a PerformLightAttack di essere richiamato
+		PerformLightAttack(); // Esegue istantaneamente il colpo successivo!
 	}
 }
 
@@ -141,6 +145,7 @@ void UBrokenDawnMeleeComponent::PerformHitCheck()
 		QueryParams
 	);
 
+	// Visual Debug Helpers
 	FColor DrawColor = bHit ? FColor::Green : FColor::Red;
 	DrawDebugSphere(GetWorld(), TraceStart, CurrentTraceRadius, 12, DrawColor, false, 1.0f);
 	DrawDebugSphere(GetWorld(), TraceEnd, CurrentTraceRadius, 12, DrawColor, false, 1.0f);
@@ -153,14 +158,17 @@ void UBrokenDawnMeleeComponent::PerformHitCheck()
 			AActor* HitActor = Hit.GetActor();
 			if (HitActor && !AlreadyHitActors.Contains(HitActor))
 			{
+				// --- FILTRO FUOCO AMICO (Friendly Fire Check) ---
 				if (!bEnableFriendlyFire)
 				{
+					// Recupera il Pawn del proprietario (gestisce sia se il componente è sul Character che su un'Arma)
 					APawn* OwnerPawn = Cast<APawn>(GetOwner());
 					if (!OwnerPawn && GetOwner())
 					{
 						OwnerPawn = Cast<APawn>(GetOwner()->GetOwner());
 					}
 
+					// Recupera il Pawn dell'attore colpito (gestisce anche mesh/accessori agganciati al nemico)
 					APawn* HitPawn = Cast<APawn>(HitActor);
 					if (!HitPawn && HitActor)
 					{
@@ -169,6 +177,7 @@ void UBrokenDawnMeleeComponent::PerformHitCheck()
 
 					if (OwnerPawn && HitPawn)
 					{
+						// Se entrambi sono controllati dal Giocatore o entrambi sono AI/Nemici, ignora il colpo
 						if (OwnerPawn->IsPlayerControlled() == HitPawn->IsPlayerControlled())
 						{
 							continue;
@@ -180,8 +189,33 @@ void UBrokenDawnMeleeComponent::PerformHitCheck()
 
 				DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 16.0f, 12, FColor::Yellow, false, 2.0f);
 
-				// --- APPLICAZIONE DANNO ---
-				// Gli effetti SFX e VFX di risposta al colpo vengono attivati dall'attore colpito nel suo evento TakeDamage/ReceiveAnyDamage
+				// --- 1. RIPRODUZIONE AUDIO IMPATTO ---
+				if (HitSound)
+				{
+					UGameplayStatics::PlaySoundAtLocation(this, HitSound, Hit.ImpactPoint);
+				}
+
+				// --- 2. SPAWN PARTICELLE SUL PUNTO DI IMPATTO ---
+				if (HitNiagaraEffect)
+				{
+					UNiagaraFunctionLibrary::SpawnSystemAtLocation(
+						GetWorld(),
+						HitNiagaraEffect,
+						Hit.ImpactPoint,
+						Hit.ImpactNormal.Rotation()
+					);
+				}
+				else if (HitParticleEffect)
+				{
+					UGameplayStatics::SpawnEmitterAtLocation(
+						GetWorld(),
+						HitParticleEffect,
+						Hit.ImpactPoint,
+						Hit.ImpactNormal.Rotation()
+					);
+				}
+
+				// --- 3. APPLICAZIONE DANNO ---
 				UGameplayStatics::ApplyPointDamage(
 					HitActor,
 					BaseDamage,
