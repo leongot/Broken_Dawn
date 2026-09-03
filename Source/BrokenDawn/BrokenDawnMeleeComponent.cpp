@@ -141,10 +141,10 @@ void UBrokenDawnMeleeComponent::PerformHitCheck()
 		QueryParams
 	);
 
-	FColor DrawColor = bHit ? FColor::Green : FColor::Red;
+	/*FColor DrawColor = bHit ? FColor::Green : FColor::Red;
 	DrawDebugSphere(GetWorld(), TraceStart, CurrentTraceRadius, 12, DrawColor, false, 1.0f);
 	DrawDebugSphere(GetWorld(), TraceEnd, CurrentTraceRadius, 12, DrawColor, false, 1.0f);
-	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, DrawColor, false, 1.0f, 0, 1.5f);
+	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, DrawColor, false, 1.0f, 0, 1.5f);8*/
 
 	if (bHit)
 	{
