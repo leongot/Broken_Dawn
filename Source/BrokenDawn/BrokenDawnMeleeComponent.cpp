@@ -178,7 +178,7 @@ void UBrokenDawnMeleeComponent::PerformHitCheck()
 
 				AlreadyHitActors.Add(HitActor);
 
-				DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 16.0f, 12, FColor::Yellow, false, 2.0f);
+				//DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 16.0f, 12, FColor::Yellow, false, 2.0f);
 
 				// --- APPLICAZIONE DANNO ---
 				// Gli effetti SFX e VFX di risposta al colpo vengono attivati dall'attore colpito nel suo evento TakeDamage/ReceiveAnyDamage
