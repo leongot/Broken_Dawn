@@ -8,6 +8,7 @@ public class BrokenDawn : ModuleRules
 
         // Aggiunto "Niagara" tra le dipendenze pubbliche del modulo
         PublicDependencyModuleNames.AddRange(new string[] {
+            "AIModule",
             "Core",
             "CoreUObject",
             "Engine",
