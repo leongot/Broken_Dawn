@@ -141,10 +141,10 @@ void UBrokenDawnMeleeComponent::PerformHitCheck()
 		QueryParams
 	);
 
-	FColor DrawColor = bHit ? FColor::Green : FColor::Red;
+	/*FColor DrawColor = bHit ? FColor::Green : FColor::Red;
 	DrawDebugSphere(GetWorld(), TraceStart, CurrentTraceRadius, 12, DrawColor, false, 1.0f);
 	DrawDebugSphere(GetWorld(), TraceEnd, CurrentTraceRadius, 12, DrawColor, false, 1.0f);
-	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, DrawColor, false, 1.0f, 0, 1.5f);
+	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, DrawColor, false, 1.0f, 0, 1.5f);*/
 
 	if (bHit)
 	{
@@ -178,7 +178,7 @@ void UBrokenDawnMeleeComponent::PerformHitCheck()
 
 				AlreadyHitActors.Add(HitActor);
 
-				DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 16.0f, 12, FColor::Yellow, false, 2.0f);
+				//DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 16.0f, 12, FColor::Yellow, false, 2.0f);
 
 				// --- APPLICAZIONE DANNO ---
 				// Gli effetti SFX e VFX di risposta al colpo vengono attivati dall'attore colpito nel suo evento TakeDamage/ReceiveAnyDamage
