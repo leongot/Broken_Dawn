@@ -140,15 +140,15 @@ void UBrokenDawnMeleeComponent::PerformHitCheck()
 		FCollisionShape::MakeSphere(CurrentTraceRadius),
 		QueryParams
 	);
+
 	
 	/* 
 	FColor DrawColor = bHit ? FColor::Green : FColor::Red;
 	DrawDebugSphere(GetWorld(), TraceStart, CurrentTraceRadius, 12, DrawColor, false, 1.0f);
 	DrawDebugSphere(GetWorld(), TraceEnd, CurrentTraceRadius, 12, DrawColor, false, 1.0f);
 	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, DrawColor, false, 1.0f, 0, 1.5f);
-	 */
-	
-	
+	*/
+		
 	if (bHit)
 	{
 		for (const FHitResult& Hit : HitResults)
