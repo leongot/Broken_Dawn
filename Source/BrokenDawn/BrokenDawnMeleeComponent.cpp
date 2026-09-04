@@ -38,11 +38,11 @@ float UBrokenDawnMeleeComponent::PerformLightAttack()
 
 	ACharacter* CharacterOwner = Cast<ACharacter>(GetOwner());
 	if (!CharacterOwner) return 0.0f;
-	
+
 	TArray<USkeletalMeshComponent*> MeshComponents;
 	CharacterOwner->GetComponents<USkeletalMeshComponent>(MeshComponents);
 	if (MeshComponents.Num() == 0) return 0.0f;
-	
+
 	int32 SelectedIndex = bRandomizeAttacks ? FMath::RandRange(0, LightAttackMontages.Num() - 1) : ComboIndex;
 	UAnimMontage* CurrentMontage = LightAttackMontages[SelectedIndex];
 	if (!CurrentMontage) return 0.0f;
@@ -140,15 +140,12 @@ void UBrokenDawnMeleeComponent::PerformHitCheck()
 		FCollisionShape::MakeSphere(CurrentTraceRadius),
 		QueryParams
 	);
-	
-	/* 
+
 	FColor DrawColor = bHit ? FColor::Green : FColor::Red;
 	DrawDebugSphere(GetWorld(), TraceStart, CurrentTraceRadius, 12, DrawColor, false, 1.0f);
 	DrawDebugSphere(GetWorld(), TraceEnd, CurrentTraceRadius, 12, DrawColor, false, 1.0f);
 	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, DrawColor, false, 1.0f, 0, 1.5f);
-	 */
-	
-	
+
 	if (bHit)
 	{
 		for (const FHitResult& Hit : HitResults)
@@ -181,7 +178,7 @@ void UBrokenDawnMeleeComponent::PerformHitCheck()
 
 				AlreadyHitActors.Add(HitActor);
 
-				//DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 16.0f, 12, FColor::Yellow, false, 2.0f);
+				DrawDebugSphere(GetWorld(), Hit.ImpactPoint, 16.0f, 12, FColor::Yellow, false, 2.0f);
 
 				// --- APPLICAZIONE DANNO ---
 				// Gli effetti SFX e VFX di risposta al colpo vengono attivati dall'attore colpito nel suo evento TakeDamage/ReceiveAnyDamage
