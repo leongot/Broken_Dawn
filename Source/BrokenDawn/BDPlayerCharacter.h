@@ -72,54 +72,22 @@ private:
 
 	UFUNCTION(BlueprintCallable)
 	void ToggleCrouch();
-
-	void _Jump();
-	void _StopJumping();
-
+	
+	UPROPERTY()
 	TObjectPtr<UCharacterMovementComponent> CharacterMovementComponent;
-
-	//UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"), Category = "Components")
-	//UStatlineComponent* Statline;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	TObjectPtr<UCameraComponent> Camera;
-
-	UPROPERTY(EditAnywhere, Category = "Camera")
-	FVector CameraOffset = FVector(2.8f, 5.9f, 0.0f);
-
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	float FieldOfView = 90.0f;
-
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	float FirstPersonScale = 0.8f;
 
-
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float WalkSpeed = 450.0f;
-
 	UPROPERTY(EditAnywhere, Category = "Movement")
 	float SprintSpeed = 750.0f;
-
-
-	UPROPERTY(EditAnywhere, Category = "Stats")
-	FCoreStat Health;
-
-	UPROPERTY(EditAnywhere, Category = "Stats")
-	FCoreStat Stamina;
-
-	UPROPERTY(EditAnywhere, Category = "Stats", meta = (AllowPrivateAccess = "true"))
-	float SprintCostMultiplier = 50.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	float JumpCost = 10.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	float StaminaRecoveryMultiplier = 4.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	float StaminaRecoveryDelay = 0.5f;
-
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USkeletalMeshComponent> PlayerMeshComponent;
 
