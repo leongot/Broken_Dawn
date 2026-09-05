@@ -1,5 +1,4 @@
 #include "BDPlayerCharacter.h"
-#include "StatlineComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
