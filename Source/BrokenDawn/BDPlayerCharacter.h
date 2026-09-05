@@ -55,6 +55,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	TObjectPtr<UInputAction> CrouchAction;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+
+	TObjectPtr<UCameraComponent> Camera;
+	
 
 private:
 
@@ -75,9 +79,6 @@ private:
 	
 	UPROPERTY()
 	TObjectPtr<UCharacterMovementComponent> CharacterMovementComponent;
-	
-	UPROPERTY(VisibleAnywhere, Category = "Camera")
-	TObjectPtr<UCameraComponent> Camera;
 	UPROPERTY(EditAnywhere, Category = "Camera")
 	float FieldOfView = 90.0f;
 	UPROPERTY(EditAnywhere, Category = "Camera")
