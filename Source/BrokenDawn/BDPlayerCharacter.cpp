@@ -37,8 +37,16 @@ void ABDPlayerCharacter::BeginPlay()
 
 	check(GEngine != nullptr);
 
-	PlayerMeshComponent->SetAnimInstanceClass(FirstPersonAnim->GeneratedClass);
-	GetMesh()->SetAnimInstanceClass(FirstPersonAnim->GeneratedClass);
+	// Verifica che l'asset Animation Blueprint sia valido prima di accedervi
+	if (FirstPersonAnim && FirstPersonAnim->GeneratedClass)
+	{
+		PlayerMeshComponent->SetAnimInstanceClass(FirstPersonAnim->GeneratedClass);
+		GetMesh()->SetAnimInstanceClass(FirstPersonAnim->GeneratedClass);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("BDPlayerCharacter: FirstPersonAnim è NULL! Assegnalo nel Blueprint di questo Character."));
+	}
 
 	PlayerMeshComponent->SetOnlyOwnerSee(true);
 	PlayerMeshComponent->CastShadow = true;          // Forza il cast dell'ombra
